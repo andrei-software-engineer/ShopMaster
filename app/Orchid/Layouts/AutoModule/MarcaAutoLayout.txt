@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Orchid\Layouts\AutoModule;
+
+use App\Models\Auto\MarcaAuto;
+use Orchid\Screen\TD;
+use App\Models\Base\Status;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Actions\Link;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Layouts\Table;
+use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\DropDown;
+
+
+class MarcaAutoLayout extends Table
+{
+    /**
+     * Data source.
+     *
+     * @var string
+     */
+    public $target = 'objects';
+
+    /**
+     * @return TD[]
+     */
+    public function columns(): array
+    {
+
+        return [
+
+            TD::make('parentmodel','')
+                ->filter(Input::make())
+                ->defaultHidden(true),
+
+            TD::make('parentmodelid','')
+                ->filter(Input::make())
+                ->defaultHidden(true),
+
+            TD::make('ordercriteria','Order')
+                ->sort()
+                ->filter(Input::make())
+                ->render(function (MarcaAuto $obj) {
+                    return Link::make($obj->ordercriteria)
+                        ->route('platform.marcaauto.edit', $obj->_getModifyAdminParams());}),
+                    
+            TD::make('_name', 'Name')
+                ->sort()
+                ->filter(Input::make())
+                ->render(function (MarcaAuto $obj) {
+                    return Link::make($obj->_name)
+                        ->route('platform.marcaauto.edit', $obj->_getModifyAdminParams());})->filterValue(function($item){return Status::GL($item);}),
+
+            TD::make('status', 'Status')
+                ->filter(
+                    Select::make('select')
+                    ->options(Status::GA('general_status', 'all')))
+                    ->render(function (MarcaAuto $obj) {
+                        return $obj->status_text;
+                            })->filterValue(function($item){return Status::GL($item);}),
+
+
+            TD::make(__('Actions'))
+                ->align(TD::ALIGN_CENTER) 
+                ->width('100px')
+                ->render(fn (MarcaAuto $obj) => DropDown::make()
+                ->icon('options-vertical')
+                ->list([
+                    
+                    Link::make(__('Edit'))
+                    ->route('platform.marcaauto.edit',$obj->_getModifyAdminParams())
+                    ->icon('pencil'),
+
+                    Link::make(__('Gallery'))
+                    ->route('platform.gallery.list', $obj->_getMediaAdminParams('platform.marcaauto.list'))
+                    ->icon('picture'),
+
+                    Link::make(__('Special Filter'))
+                    ->route('platform.specialfilterauto.list', $obj->_getMediaAdminParams('platform.marcaauto.list'))
+                    ->icon('picture'),
+                    
+                    Button::make(__('Delete'))
+                        ->icon('trash')
+                        ->confirm(__('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
+                        ->action(route('platform.marcaauto.remove', $obj->_getFiltersMedia()))
+                        ->canSee($obj->_canDelete()),
+                    ])),
+        ];
+    }
+}

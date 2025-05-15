@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Orchid\Screens\ProductCategory;
+
+use Orchid\Screen\Actions\Link;
+use App\Orchid\Screens\BaseMediaScreen;
+use App\Models\ProductCategory\ProductModelAuto;
+use App\Orchid\Layouts\ProductCategoryModule\ProductModelAutoLayout;
+use App\Orchid\Screens\BaseListScreen;
+
+class ProductModelAutoListScreen extends BaseListScreen
+{
+    public $targetClass = false;
+
+    public function __construct()
+    {
+        $this->targetClass = ProductModelAuto::GetObj();
+    }
+
+            /**
+     * Button commands.
+     *
+     * @return Action[]
+     */
+    public function commandBar(): iterable
+    {
+        $rez = parent::commandBar();
+
+        if(request()->get('_backurl'))
+        {
+            $rez[] =                 
+                Link::make(__('Back to main list'))
+                    ->icon('plus')
+                    ->href(request()->get('_backurl'));
+        }
+        
+        $rez[] =                 
+            Link::make(__('Add'))
+                ->icon('plus')
+                ->href(route('platform.productmodelauto.create', $this->targetClass->_getModifyAdminParams()));
+
+        return $rez;
+    }
+
+    /**
+     * Views.
+     *
+     * @return Layout[]
+     */
+    public function layout(): array
+    {
+        return [
+            ProductModelAutoLayout::class,
+        ];
+    }
+}
+

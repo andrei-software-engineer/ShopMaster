@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Orchid\Screens\ProductCategory;
+
+use Illuminate\Http\Request;
+use App\Models\Auto\ModelAuto;
+use App\Models\Auto\ModificationAuto;
+use App\Models\Base\Status;
+use App\Models\ProductCategory\ProductMarcaAuto;
+use App\Models\ProductCategory\ProductModelAuto;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
+use Orchid\Support\Facades\Layout;
+use App\Orchid\Screens\BaseEditScreen;
+use App\Models\ProductCategory\ProductModificationAuto;
+use Orchid\Screen\Fields\Select;
+use Orchid\Screen\Fields\ViewField;
+
+class ProductModificationAutoEditScreen extends BaseEditScreen
+{
+    /**
+     * @var ProductModificationAuto
+     */
+    public $obj;
+    
+    public $targetClass = false;
+
+    public function __construct()
+    {
+        $this->targetClass = ProductModificationAuto::GetObj();
+    }
+
+    /**
+     * Query data.
+     *
+     * @param ProductModificationAuto $obj
+     *
+     * @return array
+     */
+    public function query(ProductModificationAuto $obj): array
+    {
+        return parent::_query($obj);
+    }
+
+    /**
+     * Views.
+     *
+     * @return Layout[]
+     */
+    public function layout(): array
+    { 
+        $idproduct = request()->get('filter')['idproduct'];
+
+        $f0 = array();
+        $f0['_where']['idproduct'] = $idproduct;
+        $productmarca = ProductMarcaAuto::_getAll($f0, array('_admin' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+
+        if($this->obj->idmodel){
+            $idselected = $this->obj->idmodel;
+        }else{
+            $idselected = '';
+        }
+
+        $infoparser = [];
+        foreach($productmarca as $item){
+            $infoparser[$item->id] = [
+                'href' => route('platform.execselectmodelauto', ['idmarca' => $item->marca->id, 'idselected' => $idselected]),
+                'targetid' => $this->obj->_getAdminId('idmodel')
+            ];
+        }
+        $infoparser = json_encode($infoparser);
+
+        $productmarca_select = array();
+        foreach ($productmarca as $v) {
+            $productmarca_select[$v->id] = $v->marca->_name;
+        }     
+
+
+        return [
+            Layout::rows([
+                
+                Input::make('obj._requestInfo')
+                    ->set('hidden', true),
+                
+                Select::make('idmarca')
+                    ->class('js_CA_select')
+                    ->options($productmarca_select)
+                    ->title(_GLA('TI_idmarca'))
+                    ->id($this->obj->_getAdminId('idmarca'))
+                    ->placeholder(_GLA('PH_select idmarca'))
+                    ->set('data-infoparser',$infoparser)
+                    ->set('data-oneach','1'),
+
+                ViewField::make('viewField')
+                    ->view('Orchid.generalViewField')
+                    ->id($this->obj->_getAdminId('idmodel'))
+                    ->set('id', $this->obj->_getAdminId('idmodel'))
+                    ->title('View'),
+
+                ViewField::make('viewField')
+                    ->view('Orchid.generalViewField')
+                    ->id('modautoID')
+                    ->set('id', 'modautoID')
+                    ->title('View'),
+
+                Input::make('obj.idproduct')
+                    ->set('hidden', true),
+            ])
+        ];
+    }
+
+
+    /**
+     * @param ProductModificationAuto    $obj
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createOrUpdate(ProductModificationAuto $obj, Request $request)
+    {
+        $obj->idmodificationauto =  $request['obj_idmodificationauto'];
+
+        return parent::_createOrUpdate($obj, $request);
+    }
+
+    public function backroute(ProductModificationAuto $obj, Request $request)
+    {
+        return parent::_backroute($obj, $request);
+    }
+}
+

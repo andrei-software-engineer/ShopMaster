@@ -1,0 +1,1 @@
+<a href={{route('web.index')}} class="js_alhl logo"> </a> <br>

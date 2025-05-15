@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Orchid\Layouts\ProductCategoryModule;
+
+use Orchid\Screen\TD;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Layouts\Table;
+use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\DropDown;
+use App\Models\ProductCategory\ProductModificationAuto;
+
+class ProductModificationAutoLayout extends Table
+{
+    /**
+     * Data source.
+     *
+     * @var string
+     */
+    public $target = 'objects';
+
+    /**
+     * @return TD[]
+     */
+    public function columns(): array
+    {
+        return [
+
+            TD::make('idmodificationauto','Modification')
+                ->sort()
+                ->filter(Input::make())
+                ->render(function (ProductModificationAuto $obj) {
+                    return $obj->modificationAuto_name; }),
+
+            TD::make(__('Actions'))
+                ->align(TD::ALIGN_CENTER) 
+                ->width('100px')
+                ->render(fn (ProductModificationAuto $obj) => DropDown::make()
+                ->icon('options-vertical')
+                ->list([
+
+                    Button::make(__('Delete'))
+                        ->icon('trash')
+                        ->confirm(__('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'))
+                        ->action(route('platform.productmodificationauto.remove', $obj->_getFiltersMedia()))
+                        ->canSee($obj->_canDelete()),
+                    ])),
+        ];
+    }
+}

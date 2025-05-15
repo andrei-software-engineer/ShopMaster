@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Orchid\Screens\Auto;
+
+use Orchid\Screen\Actions\Link;
+use App\Models\Auto\ModificationAuto;
+use App\Orchid\Layouts\AutoModule\ModificationAutoLayout;
+use App\Orchid\Screens\BaseListScreen;
+use App\Orchid\Screens\BaseMediaScreen;
+
+class ModificationAutoListScreen extends BaseListScreen
+{
+    public $targetClass = false;
+
+    public function __construct()
+    {
+        $this->targetClass = ModificationAuto::GetObj();
+    }
+
+            /**
+     * Button commands.
+     *
+     * @return Action[]
+     */
+    public function commandBar(): iterable
+    {
+        $rez = parent::commandBar();
+
+        $rez[] =                 
+            Link::make(__('Add'))
+                ->icon('plus')
+                ->href(route('platform.modificationauto.create', $this->targetClass->_getModifyAdminParams()));
+
+        return $rez;
+    }
+
+    /**
+     * Views.
+     *
+     * @return Layout[]
+     */
+    public function layout(): array
+    {
+        return [
+            ModificationAutoLayout::class,
+        ];
+    }
+}

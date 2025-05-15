@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Models\ProductCategory;
+
+use App\Models\Auto\ModificationAuto;
+use Orchid\Screen\AsSource;
+use Orchid\Access\RoleAccess;
+use Orchid\Filters\Filterable;
+use Orchid\Metrics\Chartable;
+use Orchid\Filters\Types\Like;
+use App\Models\Base\BaseModel;
+
+class ProductModificationAuto extends BaseModel 
+{
+    use RoleAccess, Filterable, AsSource, Chartable;
+
+    /**
+     * @var array
+     */
+
+    // --------------------------------------------
+    private static $MainObj = false;
+
+    public static function GetObj()
+    {
+       if (self::$MainObj) return self::$MainObj;
+       self::$MainObj = new ProductModificationAuto;
+       return self::$MainObj;
+    } 
+    // --------------------------------------------
+
+    public $table = 'product_modification';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'idmodificationauto',
+        'idproduct',
+    ];
+
+    protected $allowedFilters = [
+        'id' => Like::class,
+        'idmodificationauto',
+        'idproduct',
+    ];
+
+        /**
+     * @var array
+     */
+    protected $allowedSorts = [
+        'id',
+        'idmodificationauto',
+        'idproduct',
+    ];
+
+    protected $sortCriteria = [
+        'id' => 'desc',
+    ];
+
+    protected $_keys = [
+        'id',
+        array('idmodificationauto', 'idproduct'),
+    ];
+
+
+    public  function processObject($obj, $params)
+    {
+        $params = (array)$params;
+
+        $obj = parent::processObject($obj, $params);
+
+        if ((isset($params['_admin']) && $params['_admin'] == '1')
+            || (isset($params['_full']) && $params['_full'] == '1'))
+        {
+            $modification = ModificationAuto::_get($obj->idmodificationauto, array('_admin' => '1','_musttranslate' => 1));
+            $obj->modificationAuto_name = ($modification && $modification->_name) ? $modification->_name : 'nu exista ';
+            $obj->modification = $modification;
+            $obj->canDelete = $obj->_canDelete();
+        }
+
+        return $obj;
+    }
+
+    public function _setParams() {
+        if (!$this) return;
+        $this->_setProductParent();
+    }
+
+    public function _canDelete()
+    {       
+        $t =  parent::_canDelete();
+        if(!$t){
+            return false;
+        }
+        return true;
+    }
+}

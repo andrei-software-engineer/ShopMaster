@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Orchid\Screens\ProductCategory;
+
+use Illuminate\Http\Request;
+use App\Models\Auto\ModelAuto;
+use App\Models\Base\Status;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
+use Orchid\Support\Facades\Layout;
+use App\Orchid\Screens\BaseEditScreen;
+use App\Models\ProductCategory\ProductModelAuto;
+use Orchid\Screen\Fields\Select;
+
+class ProductModelAutoEditScreen extends BaseEditScreen
+{
+    /**
+     * @var ProductModelAuto
+     */
+    public $obj;
+    
+    public $targetClass = false;
+
+    public function __construct()
+    {
+        $this->targetClass = ProductModelAuto::GetObj();
+    }
+
+    /**
+     * Query data.
+     *
+     * @param ProductModelAuto $obj
+     *
+     * @return array
+     */
+    public function query(ProductModelAuto $obj): array
+    {
+        return parent::_query($obj);
+    }
+
+    /**
+     * Views.
+     *
+     * @return Layout[]
+     */
+    public function layout(): array
+    { 
+        $f = array();
+        $f['_where']['status'] = Status::ACTIVE;
+        $product_model_select = ModelAuto::_getAllForSelect($f, array('_words' => '1', '_musttranslate' => 1), '_name');
+
+        return [
+            Layout::rows([
+                
+                Input::make('obj._requestInfo')
+                    ->set('hidden', true),
+
+                Select::make('obj.idmodelauto')
+                    ->class('js_CA_select')
+                    ->options($product_model_select)
+                    ->title(_GLA('TI_idmodelauto'))
+                    ->id($this->obj->_getAdminId('idmodelauto'))
+                    ->placeholder(_GLA('PH_select idmodelauto')),
+
+                Input::make('obj.idproduct')
+                    ->set('hidden', true),
+            ])
+        ];
+    }
+
+
+    /**
+     * @param ProductModelAuto    $obj
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createOrUpdate(ProductModelAuto $obj, Request $request)
+    {
+        return parent::_createOrUpdate($obj, $request);
+    }
+
+    public function backroute(ProductModelAuto $obj, Request $request)
+    {
+        return parent::_backroute($obj, $request);
+    }
+}
+

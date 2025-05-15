@@ -1,0 +1,1 @@
+@include($_view, ['_mainParams' => $_mainParams])

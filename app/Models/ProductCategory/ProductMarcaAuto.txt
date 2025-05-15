@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Models\ProductCategory;
+
+use App\Models\Auto\MarcaAuto;
+use Orchid\Screen\AsSource;
+use Orchid\Access\RoleAccess;
+use Orchid\Filters\Filterable;
+use Orchid\Metrics\Chartable;
+use Orchid\Filters\Types\Like;
+use App\Models\Base\BaseModel;
+use App\Models\Base\Status;
+use App\Models\Category\Category;
+use App\Models\Product\Product;
+
+class ProductMarcaAuto extends BaseModel 
+{
+    use RoleAccess, Filterable, AsSource, Chartable;
+
+    /**
+     * @var array
+     */
+
+    // --------------------------------------------
+    private static $MainObj = false;
+
+    public static function GetObj()
+    {
+       if (self::$MainObj) return self::$MainObj;
+       self::$MainObj = new ProductMarcaAuto;
+       return self::$MainObj;
+    } 
+    // --------------------------------------------
+
+    public $table = 'product_marca';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'idmarcaauto',
+        'idproduct',
+    ];
+
+    protected $allowedFilters = [
+        'id' => Like::class,
+        'idmarcaauto',
+        'idproduct',
+    ];
+
+        /**
+     * @var array
+     */
+    protected $allowedSorts = [
+        'id',
+        'idmarcaauto',
+        'idproduct',
+    ];
+
+    protected $sortCriteria = [
+        'id' => 'desc',
+    ];
+
+    protected $_keys = [
+        'id',
+        array('idmarcaauto', 'idproduct'),
+    ];
+
+
+    public  function processObject($obj, $params)
+    {
+        $params = (array)$params;
+        
+        $obj = parent::processObject($obj, $params);
+        
+        if ((isset($params['_admin']) && $params['_admin'] == '1')
+            || (isset($params['_full']) && $params['_full'] == '1'))
+        {
+            $marca = Category::_get($obj->idmarcaauto, array('_full'=> 1,'_musttranslate' => 1));
+            $obj->marca_name = ($marca && $marca->_name) ? $marca->_name : 'nu exista ';
+            $obj->marca = $marca;
+            
+            $obj->canDelete = $obj->_canDelete();
+        }
+
+        return $obj;
+    }
+
+    public function _setParams() {
+        if (!$this) return;
+        $this->_setProductParent();
+    }
+
+    public function _canDelete()
+    {       
+        $t =  parent::_canDelete();
+        if(!$t){
+            return false;
+        }
+        return true;
+    }
+}

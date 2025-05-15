@@ -1,0 +1,106 @@
+<?php
+
+namespace App\Models\Auto;
+
+use App\Models\Base\Status;
+use Orchid\Screen\AsSource;
+use Orchid\Access\RoleAccess;
+use Orchid\Filters\Filterable;
+use Orchid\Metrics\Chartable;
+use Orchid\Filters\Types\Like;
+use App\Models\Base\BaseModel;
+
+
+class ModelAuto extends BaseModel
+{
+    use RoleAccess, Filterable, AsSource, Chartable;
+
+    /**
+     * @var array
+     */
+
+    // --------------------------------------------
+    private static $MainObj = false;
+
+    public static function GetObj()
+    {
+        if (self::$MainObj) return self::$MainObj;
+        self::$MainObj = new ModelAuto;
+        return self::$MainObj;
+    }
+    // --------------------------------------------
+
+    public $table = 'modelauto';
+
+    public $timestamps = false;
+
+    protected $fillable = [
+        'id',
+        'ordercriteria',
+        'status',
+        'idmarca',
+        'code'
+    ];
+
+    protected $allowedFilters = [
+        'id' => Like::class,
+        'ordercriteria',
+        'status',
+        'idmarca',
+        'code'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $allowedSorts = [
+        'id',
+        'ordercriteria',
+        'status',
+        'idmarca',
+        'code'
+    ];
+
+    protected $sortCriteria = [
+        'id' => 'desc',
+    ];
+
+    protected $_keys = [
+        'id',
+        array('identifier', 'type'),
+    ];
+
+    protected $_words = [
+        '_name',
+    ];
+
+    public  function processObject($obj, $params)
+    {
+        $params = (array)$params;
+
+        $obj = parent::processObject($obj, $params);
+
+        if ((isset($params['_admin']) && $params['_admin'] == '1')
+        || (isset($params['_full']) && $params['_full'] == '1'))  
+        {
+            $obj->status_text = Status::GL($obj->status);
+            $obj->canDelete = $obj->_canDelete();
+        }
+
+        return $obj;
+    }
+
+    public function _setParams() {
+        if (!$this) return;
+        $this->_setMediaParams();
+    }
+
+    public function _canDelete()
+    {       
+        $t =  parent::_canDelete();
+        if(!$t){
+            return false;
+        }
+        return true;
+    }
+}

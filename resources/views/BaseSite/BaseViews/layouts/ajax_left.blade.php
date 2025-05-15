@@ -1,0 +1,1 @@
+@include('BaseSite.BaseViews.layouts.contentleft', ['_mainParams' => $_mainParams, '_view' => $_view])

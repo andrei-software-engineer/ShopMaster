@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Orchid\Screens\Auto;
+
+use App\Models\Auto\MarcaAuto;
+use App\Models\Base\Status;
+use Illuminate\Http\Request;
+use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Select;
+use Orchid\Support\Facades\Layout;
+use App\Orchid\Screens\BaseEditScreen;
+
+class MarcaAutoEditScreen extends BaseEditScreen
+{
+    /**
+     * @var MarcaAuto
+     */
+    public $obj;
+    
+    public $targetClass = false;
+
+    public function __construct()
+    {
+        $this->targetClass = MarcaAuto::GetObj();
+    }
+
+    /**
+     * Query data.
+     *
+     * @param MarcaAuto $obj
+     *
+     * @return array
+     */
+    public function query(MarcaAuto $obj): array
+    {
+        return parent::_query($obj);
+    }
+    /**
+     * Views.
+     *
+     * @return Layout[]
+     */
+    public function layout(): array
+    { 
+        $auto_status = Status::GA('general_status');
+
+        return [
+            Layout::rows([
+
+                Input::make('obj._requestInfo')
+                    ->set('hidden', true),
+
+                $this->getSelectLang(),
+
+                Select::make('obj.status')
+                    ->options($auto_status)
+                    ->class('js_CA_select')
+                    ->title(_GLA('TI_status'))
+                    ->id($this->obj->_getAdminId('status'))
+                    ->placeholder(_GLA('PH_select status')),
+
+                Input::make('obj.ordercriteria')
+                    ->class('js_CA_enter form-control')
+                    ->set('data-click','#UpdateButton')
+                    ->title(_GLA('TI_ordercriteria'))
+                    ->id($this->obj->_getAdminId('ordercriteria'))
+                    ->placeholder(_GLA('PH_set ordercriteria')),
+
+                Input::make('obj._name')
+                    ->class('js_CA_enter form-control')
+                    ->set('data-click','#UpdateButton')
+                    ->title(_GLA('TI_name'))
+                    ->id($this->obj->_getAdminId('_name'))
+                    ->placeholder(_GLA('PH_set name')),
+
+            ])
+        ];
+    }
+
+    /**
+     * @param MarcaAuto    $obj
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createOrUpdate(MarcaAuto $obj, Request $request)
+    {
+        return parent::_createOrUpdate($obj, $request);
+    }
+
+    public function backroute(MarcaAuto $obj, Request $request)
+    {
+        return parent::_backroute($obj, $request);
+    }
+}
+
