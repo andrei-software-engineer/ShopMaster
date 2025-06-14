@@ -6,13 +6,13 @@
         <table>
             <tr>
                 <th>{{ _GL('Id') }} | </th>
-                <th>{{ _GL('Status') }} | </th>
+                <th>{{ _GL('Statuss') }} | </th>
                 <th>{{ _GL('Status Plata') }} | </th>
                 <th>{{ _GL('Data') }}                         | </th>
                 <th>{{ _GL('Data Plata') }}         | </th>
                 <th>{{ _GL('Pret') }} | </th>
                 <th>{{ _GL('Discount') }} | </th>
-                {{-- <th>{{ _GL('Actions') }} | </th> --}}
+                <th>{{ _GL('Actions') }} | </th>
             </tr>
 
             @foreach($orders as $v)   

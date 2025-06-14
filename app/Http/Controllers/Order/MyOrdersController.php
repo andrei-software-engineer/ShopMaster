@@ -57,6 +57,7 @@ class MyOrdersController extends Controller
         $params['paginate'] = Paginate::getPaginateHtml($procesedPage->currPag, $procesedPage->totalpag, $urlprefix, $urlsufix);
         $params = $this->pageDetailSetBreadcrumbsOrders($params);
 
+        // dd($params);
         return $this->GetView('BaseSite.Order.myOrders', $params);
     }
 

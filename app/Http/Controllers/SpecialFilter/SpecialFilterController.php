@@ -168,12 +168,14 @@ class SpecialFilterController extends Controller
         $f['_where']['status'] = Status::ACTIVE;
 
         $params['objects'] = FilterValue::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+        // dd($params);
         
         return view('BaseSite.HomePage.homePageSpecialFilterSpecialFilters', $params);
     }
 
     public function homePageSpecialFilterSpecialCategory($level, $idparentcategory)
     {
+        // dd($idparentcategory);
         if ($level > 2) 
         {
             return view('BaseSite.Empty.empty');
@@ -183,10 +185,14 @@ class SpecialFilterController extends Controller
         if ($idparentcategory)
         {
             $f = array();
-            $f['_where']['idparent'] = $idparentcategory;
+            $f['_where']['idfilter'] = 1;
+            // $f['_where']['idparent'] = $idparentcategory;
             $f['_where']['status'] = Status::ACTIVE;
 
-            $params['objects'] = Category::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+            // $params['objects'] = Category::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+            $params['objects'] = FilterValue::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+
+            // dd($params);
         }
 
         $params['level'] = $level;
@@ -209,14 +215,18 @@ class SpecialFilterController extends Controller
             return view('BaseSite.Empty.empty');
         }
 
+
         $params['objects'] = [];
         if ($idparentcategory)
         {
             $f = array();
-            $f['_where']['idparent'] = $idparentcategory;
+            // $f['_where']['idparent' ] = 0;
+            $f['_where']['idfilter'] = 1;
             $f['_where']['status'] = Status::ACTIVE;
 
-            $params['objects'] = Category::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+            // $params['objects'] = Category::_getAll($f, array('_full' => '1', '_musttranslate' => 1));
+            $params['objects'] = FilterValue::_getAll($f, array('_full' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+
         }
 
         $params['level'] = $level;
@@ -315,6 +325,8 @@ class SpecialFilterController extends Controller
 
         // dd('idspecialfilter', $idspecialfilter, 'filter', $filter, 'idmaincategory', $idmaincategory, 'idspecialcategory', $idspecialcategory,'params', $params);
 
+
+        // dd($params);
         return redirect()->route('web.product.list', $params);
     }
 }

@@ -9,7 +9,7 @@
             <tbody>
                 
                 <tr>
-                    <td colspan="2">{{ _GL('Pay status') }}</td>
+                    <td colspan="2">{{ _GL('Pay statuss') }}</td>
                     <td colspan="2"> {{ $order->paystatus_text }}</td>
                 </tr>
 

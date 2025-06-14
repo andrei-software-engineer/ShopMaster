@@ -115,7 +115,10 @@ class Category extends BaseModel
             $f['_where']['status'] = Status::ACTIVE;
             $f['_where']['idparent'] = $obj->id;
             $obj->_childrens = self::_getAll($f, $params);
+
         }
+
+        // dd($obj);
 
         $obj->title_show = $obj->_title;
         $obj->url = Slug::prepareUrl('', $obj->id, 'web.category');

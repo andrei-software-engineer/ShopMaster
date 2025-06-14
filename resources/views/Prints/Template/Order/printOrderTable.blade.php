@@ -14,7 +14,7 @@
                 </tr>
 
                 <tr>
-                    <td><b>{{ _GL('Status') }}</b></td>
+                    <td><b>{{ _GL('Status table') }}</b></td>
                     <td>{{ $data['order']->status_text }}</td>
                 </tr>
 

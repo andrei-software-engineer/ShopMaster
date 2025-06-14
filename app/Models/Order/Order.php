@@ -150,6 +150,7 @@ class Order extends BaseModel
             || (isset($params['_full']) && $params['_full'] == '1'))
         {
             $obj->status_text = Status::GL($obj->status);
+            // dd($obj);
             $obj->paymenthod_text = Status::GL($obj->idpaymenthod);
             $obj->metodalivrare_text = Status::GL($obj->idmetodalivrare);
             $obj->paystatus_text = Status::GL($obj->paystatus);

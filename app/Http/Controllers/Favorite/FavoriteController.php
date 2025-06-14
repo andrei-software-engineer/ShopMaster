@@ -80,6 +80,7 @@ class FavoriteController extends Controller
     public function favoriteSection()
 	{        
         $params = array();
+
         if(collect($this->checkIdUser())->count() == 0){
             $params['objects'] = '';
         }else{
@@ -112,11 +113,10 @@ class FavoriteController extends Controller
             $urlprefix = route('web.favorite').'?page=';
             $urlsufix = '';
     
-            $favorites = Favorite::_getAll($f, array('_full' => '1' ,'_musttranslate' => '1', '_usecache' => '0', '_cachelifetime' => 2592000));
+            $favorites = Favorite::_getAll($f, array('_full' => '1' ,'_musttranslate' => '1'));
 
         }        
-    
-       
+           
         $params['left_params']['usermenu'] = [];
         $params['obj']['favorite'] = $favorites;
         $params['obj']['paginate'] = Paginate::getPaginateHtml($procesedPage->currPag, $procesedPage->totalpag, $urlprefix, $urlsufix, 'js_al');

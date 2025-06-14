@@ -34,8 +34,10 @@ class OrderController extends Controller
     public function checkout()
     {
 
+
         $user = Auth::user();
         $infoUser = InfoUser::query()->where('iduser', $user->id)->first();
+        // dd($user->id);
 
 		$params = array();
         $params['products'] = Order::getProducts();
@@ -56,6 +58,7 @@ class OrderController extends Controller
         $params['paginate'] = Paginate::getPaginateHtml($procesedPage->currPag, $procesedPage->totalpag, $urlprefix, $urlsufix, 'js_al', 'product_page');
 
         $params = $this->pageDetailSetBreadcrumbsProfile($params);
+
         return $this->GetView('BaseSite.Order.checkout', $params);
     }
 

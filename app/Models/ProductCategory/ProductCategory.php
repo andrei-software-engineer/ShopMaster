@@ -134,9 +134,11 @@ class ProductCategory extends BaseModel
 			return view('BaseSite.Empty.empty'); 
 		}
         
+        
 		if ($selected)
 		{
 			$obj = Category::_get($selected ,array('_admin' => '1', '_musttranslate' => 1));
+                        
 			if ($obj->idparent)
 			{
 				$params['name'] = $name;
@@ -151,8 +153,9 @@ class ProductCategory extends BaseModel
 
                 $f = array();
                 $f['_where']['idparent'] = $obj->idparent;
-                $all = Category::_getAll($f, array('_admin' => '1', '_musttranslate' => 1, '_usecache' => '0'));
+                $all = Category::_getAll($f, array('_admin' => '1', '_musttranslate' => 1));
                 $params['objects'] = $all;
+                dd($params);
                 $cilds = (!count($all)) ? view('BaseSite.Empty.empty')->render() : ViewField::make('obj.' . $name)
                     ->view('Orchid.selectGeneral')
                     ->title('Select category')
@@ -180,7 +183,6 @@ class ProductCategory extends BaseModel
         if(!count($all)) return view('BaseSite.Empty.empty'); 
        
 		$params['objects'] = $all;
-        // dd($params);
 
         return  ViewField::make('obj.'. $name)
                     ->view('Orchid.selectGeneral')

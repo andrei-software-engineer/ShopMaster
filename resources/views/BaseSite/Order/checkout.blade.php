@@ -10,7 +10,7 @@
             </div>
             <div class="my-2">
                 <label>{{ _GL('Destinatar numar') }} </label>
-                <input type="text" id="destinatar_phone" name="destinatar_phone" value={{ $infoUser->phone }}>
+                <input type="text" id="destinatar_phone" name="destinatar_phone" value={{$infoUser->phone ?? '' }}>
             </div>
             <div class="my-2">
                 <label>{{ _GL('Destinatar email') }} </label>

@@ -58,7 +58,7 @@ class CategoryController extends Controller
         $params = array();
         $params['categoryobj'] = $obj;
         $params = $this->categorySetBreadcrumbs($params);
-        
+
         if ($obj) {
             $params['_FaqList'] = FaqController::GetFAQ('category', $obj->id);
         }
@@ -66,6 +66,7 @@ class CategoryController extends Controller
         if($filter){
             $params['specFilter'] = $filter;
         }
+
 
         return ProductController::GetObj()->productList_inter($params);
     }
@@ -78,7 +79,7 @@ class CategoryController extends Controller
         $f['_where']['idparent'] = 0;
         $f['_where']['status'] = Status::ACTIVE;
 
-        $obj = Category::_getAll($f, array('_full' => '1','_musttranslate' => 1, '_usecache' => '0', '_cachelifetime' => 2592000, '_withChildren' => 1));
+        $obj = Category::_getAll($f, array('_full' => '1','_musttranslate' => 1,  '_withChildren' => 1));
 
         $params = array();
         $params['objs'] = $obj;
@@ -183,7 +184,7 @@ class CategoryController extends Controller
     {
         $f = array();
         $params = array();
-        // $f['_where']['idparent'] = \config('app.allegro_first_category_localid');
+        $f['_where']['idparent'] = 0;
         $f['_where']['status'] = Status::ACTIVE;
 
         $objects = Category::_getAll($f, array('_full' => '1' ,'_musttranslate' => '1', '_usecache' => '0', ));

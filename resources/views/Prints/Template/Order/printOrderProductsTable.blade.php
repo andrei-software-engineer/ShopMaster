@@ -5,7 +5,7 @@
             <tr>
 
                 <th scope="col">{{ _GL('Descriere') }}</th>
-                <th scope="col">{{ _GL('Status') }}</th>
+                <th scope="col">{{ _GL('Status product') }}</th>
                 <th scope="col">{{ _GL('Cantitate') }}</th>
                 <th scope="col">{{ _GL('real_pricewotvat') }}</th>
                 <th scope="col">{{ _GL('discount_percent') }}</th>

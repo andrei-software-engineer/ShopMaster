@@ -6,8 +6,8 @@
                 <th scope="col">{{ _GL('Pay status') }}</th>
                 <th scope="col">{{ _GL('Data') }}</th>
                 <th scope="col">{{ _GL('Jurnal Type') }}</th>
-                <th scope="col">{{ _GL('Status') }}</th>
-                <th scope="col">{{ _GL('Note') }}</th>
+                <th scope="col">{{ _GL('Status print') }}</th>
+                <th scope="col">{{ _GL('Note journal') }}</th>
 
             </tr>
         </thead>

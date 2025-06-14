@@ -12,7 +12,7 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2">{{ _GL('Status') }}</td>
+                    <td colspan="2">{{ _GL('Statusx') }}</td>
                     <td colspan="2"> {{$order->status_text }}</td>
                 </tr>
 

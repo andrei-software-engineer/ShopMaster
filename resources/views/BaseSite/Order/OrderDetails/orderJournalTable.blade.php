@@ -3,10 +3,10 @@
     <table class="table table-light">
         <thead>
             <tr>
-                <th scope="col">{{ _GL('Pay status') }}</th>
+                <th scope="col">{{ _GL('Pay statu') }}</th>
                 <th scope="col">{{ _GL('Data') }}</th>
                 <th scope="col">{{ _GL('Jurnal Type') }}</th>
-                <th scope="col">{{ _GL('Status') }}</th>
+                <th scope="col">{{ _GL('Statusss') }}</th>
                 <th scope="col">{{ _GL('Note') }}</th>
 
             </tr>
